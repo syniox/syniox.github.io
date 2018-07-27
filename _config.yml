@@ -1,0 +1,6 @@
+title: syniox's blog
+description: 过往如烟。
+show_downloads: true
+markdown:kramdown
+google_analytics:
+theme: jekyll-theme-cayman

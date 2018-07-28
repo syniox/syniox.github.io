@@ -2,8 +2,7 @@
 layout: default
 ---
 
-{{ site.baseurl }}
-*若是夜凉已成梦，只恨时光太匆匆。*
+*人可以卑微如尘土，但不可扭曲如蠕虫。*
 
 {% for post in site.posts %}
 

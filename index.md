@@ -2,12 +2,11 @@
 layout: default
 ---
 
-若是夜凉已成梦，只恨时光太匆匆。
+{{ site.baseurl }}
+*若是夜凉已成梦，只恨时光太匆匆。*
 
 {% for post in site.posts %}
 
-	<li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
-	
-{% endfor %}
+{{ post.date | date_to_string }} <a href="{{ post.url }}">{{ post.title }}</a>  
 
-$E=mc^2$
+{% endfor %}

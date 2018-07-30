@@ -2,7 +2,7 @@
 layout: default
 ---
 
-*人可以卑微如尘土，但不可扭曲如蠕虫。*
+<center>"自己选择的路，跪着也要走完。"</center>
 
 {% for category in site.categories %}
 <h2>{{ category | first }}</h2>

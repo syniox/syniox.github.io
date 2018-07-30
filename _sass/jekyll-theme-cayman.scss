@@ -105,6 +105,51 @@ a {
   }
 }
 
+.btn-black {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: rgba(12, 12, 12, 0.7);
+  background-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(12, 120, 59 , 0.4);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 0.2rem;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+
+  &:hover {
+    color: rgba(128, 128, 128, 0.8);
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: rgba(128, 128, 128, 0.3);
+  }
+
+  + .btn-black {
+    margin-left: 1rem;
+  }
+
+  @include large {
+    padding: 0.3rem 0.4rem;
+    font-size: 0.9rem
+  }
+
+  @include medium {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  @include small {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+
+    + .btn-black {
+      margin-top: 1rem;
+      margin-left: 0;
+    }
+  }
+}
+
 .page-header {
   color: $header-heading-color;
   text-align: center;

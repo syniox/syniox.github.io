@@ -15,7 +15,7 @@ $e(x)=[x=1]$  （只有x=1时值才为一，其他时候值为0）
 
 $id_ k(x)=x^k$  
 
-$\phi(x)=\sum_ {i=1}^{x-1} [gcd(i,x)=1]$
+$\phi(x)=\sum_ {i=1}^{x} [gcd(i,x)=1]$
 
 $a \otimes b$表示$a$和$b$的狄利克雷卷积  
 >
@@ -64,7 +64,7 @@ $F \otimes \mu = f \otimes id_ 0 \otimes \mu$
 反..反演
 
 
-### 计算一类函数的前缀和
+### 计算一类积性函数的前缀和
 
 ---
 这里定义$F$是$f$的前缀和。  
@@ -75,4 +75,12 @@ $f^* \otimes f =f^+$
 则$F^+(n)=\sum_ {i=1}^n \sum _{d\|i}$$f(d)f^*(\frac{i}{d})$  
 
 把对每个数枚举因数改为枚举因数找倍数  
-$F^+(n)=\sum_ {1=1}^nf^*(i) \sum $
+$F^+(n)=\sum_ {1=1}^nf^ *(i) \sum_ {j=1}^{\lfloor \frac{n}{i} \rfloor}f(j)=\sum_ {i=1} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$  
+把$i=1$的情况单独提取出来  
+$F^ +(n)=f^ *(1)F(n)+\sum_ {i=2} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$  
+对于积性函数有一个很显然的性质：$a(1)$=1或0，否则不满足$f(a) * f(b)=f(ab)$  
+为0时没有任何意义，所以我们构造的时候不会选择一个$f(x)=0$的函数,所以  
+$F^ +(n) = F(n)+\sum_ {i=2} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$  
+$F(n)=F^ +(n)-\sum_ {i=2} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$  
+这样先递推$F(n)$到$N^{frac{2}{3}}级别的位置
+然后记忆化一下$F(\lfloor \frac{n}{i} \rfloor)$  

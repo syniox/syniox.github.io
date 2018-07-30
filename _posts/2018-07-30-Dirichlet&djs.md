@@ -25,6 +25,9 @@ $a \otimes b$表示$a$和$b$的狄利克雷卷积
 ### 几个证明  
 
 ---
+[关于$\phi$的线性筛法](https://blog.csdn.net/Clove_unique/article/details/50805803)
+
+---
 $\sum_ {d\|n}\mu(d)=[n=1]$  
 ($\mu \otimes id_ 0=e$)
 

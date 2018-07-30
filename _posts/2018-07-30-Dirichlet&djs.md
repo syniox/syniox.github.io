@@ -82,5 +82,5 @@ $F^ +(n)=f^ *(1)F(n)+\sum_ {i=2} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$
 为0时没有任何意义，所以我们构造的时候不会选择一个$f(x)=0$的函数,所以  
 $F^ +(n) = F(n)+\sum_ {i=2} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$  
 $F(n)=F^ +(n)-\sum_ {i=2} ^nf^ *(i)F(\lfloor \frac{n}{i} \rfloor)$  
-这样先递推$F(n)$到$N^{frac{2}{3}}级别的位置
-然后记忆化一下$F(\lfloor \frac{n}{i} \rfloor)$  
+这样先递推$F(n)$到$n^{\frac{2}{3}}$级别的位置  
+然后记忆化一下 $F( \lfloor \frac{n}{i} \rfloor )$  

@@ -55,7 +55,19 @@ $\frac{1}{n},\frac{2}{n},\frac{3}{n},\frac{4}{n},\frac{5}{n},...$
 对于任何一个$i\|n$的$i$，与$gcd(i,j)==1\&j<i$的$j$构成的分数$\frac{j}{i}$也一定能找到与之相等的$\frac{k}{n}$  
 所以就相等了
 
-### 一个 Interesting 的性质  
+---
+$\phi(n)=n\prod_{i=1} ^l (1- \frac{1}{p_ i})$  
+（设$p_ i(1\leq i \leq l)$为$n$的质因数）  
+
+因为$n=\prod_ {i=1} ^l p_ i ^{k_ i}$  
+而且当$a,b$互质时，有$\phi(a * b)=\phi(a) * \phi(b)$  
+所以$\phi(n)=\prod_ {i=1} ^l \phi(p_ i ^{k_ i})$  
+
+又$\phi(p^k)=p^k-p^{k-1}=p^k(1-\frac{1}{p})$  
+$\phi(n)=\prod_ {i=1}^l p_ i^k(1-\frac{1}{p_ i})=n\prod_ {i=1}^l(1-\frac{1}{p_ i})$
+
+
+### 一个 Interesting 的反演证明  
 
 ---
 现在有函数$F(x)=\sum_ {i\|x} f(i)$，而且知道$F(x)$要求$f(x)$  
@@ -64,7 +76,7 @@ $\frac{1}{n},\frac{2}{n},\frac{3}{n},\frac{4}{n},\frac{5}{n},...$
 $F \otimes \mu = f \otimes id_ 0 \otimes \mu$  
 然而前面证明了$\mu \otimes id_ 0=e$  
 所以$F \otimes \mu=f \otimes e =f$  
-反..反演
+反..反演  
 
 
 ### 计算一类积性函数的前缀和

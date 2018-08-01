@@ -25,9 +25,6 @@ $a \otimes b$表示$a$和$b$的狄利克雷卷积
 ### 几个证明  
 
 ---
-[关于$\phi$的线性筛法](https://blog.csdn.net/Clove_unique/article/details/50805803)
-
----
 $\sum_ {d\|n}\mu(d)=[n=1]$  
 ($\mu \otimes id_ 0=e$)
 
@@ -43,34 +40,7 @@ $(1+x)^k=\sum_ {i=0}^k(^k_ i)x^i$
 所以$\sum_ {d\|n} \mu(d)=(1-1)^k$
 
 ---
-$\sum_ {i\|x}\phi(i)=id_ 1(x)$  
-($\phi \otimes id_ 0 = id_ 1$)  
-这里就是把1~n-1/n的所有数列出来。  
-$\frac{1}{n},\frac{2}{n},\frac{3}{n},\frac{4}{n},\frac{5}{n},...$  
-($n=6$时原数列为$\frac{1}{6},\frac{1}{3},\frac{1}{2},\frac{2}{3},\frac{5}{6}$)  
-
-假如说$n$与某个数$i$有$gcd(i,n)>1$，那么他可以和$n$同时除掉这个$gcd$  
-然后这样就得到了一个新的数列，其中分子与分母互质。  
-对于任何一个小于$n$的$i$,$\frac{i}{n}$一定可以被化简成分母为$n$的因数的一个最简分数  
-对于任何一个$i\|n$的$i$，与$gcd(i,j)==1\&j<i$的$j$构成的分数$\frac{j}{i}$也一定能找到与之相等的$\frac{k}{n}$  
-所以就相等了
-
----
-$\phi(n)=n\prod_{i=1} ^l (1- \frac{1}{p_ i})$  
-（设$p_ i(1\leq i \leq l)$为$n$的质因数）  
-
-因为$n=\prod_ {i=1} ^l p_ i ^{k_ i}$  
-而且当$a,b$互质时，有$\phi(a * b)=\phi(a) * \phi(b)$  
-所以$\phi(n)=\prod_ {i=1} ^l \phi(p_ i ^{k_ i})$  
-
-又$\phi(p^k)=p^k-p^{k-1}=p^k(1-\frac{1}{p})$  
-$\phi(n)=\prod_ {i=1}^l p_ i^k(1-\frac{1}{p_ i})=n\prod_ {i=1}^l(1-\frac{1}{p_ i})$
-
-
-### 一个 Interesting 的反演证明  
-
----
-现在有函数$F(x)=\sum_ {i\|x} f(i)$，而且知道$F(x)$要求$f(x)$  
+现在有函数$F(x)=\sum_ {i\|x} f(i)$，知道$F(x)$要求$f(x)$  
 把原式子写成卷积的形式：$F=f \otimes id_ 0$  
 同时卷一下$\mu$  
 $F \otimes \mu = f \otimes id_ 0 \otimes \mu$  

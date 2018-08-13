@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 反演&积性函数前缀和&狄利克雷卷积
-category: 题解
+category: 笔记
 ---
 
 ## 反演&积性函数前缀和&狄利克雷卷积

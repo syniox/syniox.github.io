@@ -1,0 +1,70 @@
+<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content=""><title>[AGC012E] Camel and Oases - Blog | qzkszj</title><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0/normalize.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0/build/pure-min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0/build/grids-responsive-min.css"><link rel="stylesheet" href="/css/style.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js/styles/atom-one-light.css"><style>.category-list-item{display:flex}.category-list-link{flex:1 0 auto}.category-list-count{text-align:right}.post .post-content pre code{padding:0 0}</style><meta name="generator" content="Hexo 6.2.0"><link rel="alternate" href="/atom.xml" title="Blog | qzkszj" type="application/atom+xml"></head><body class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">[AGC012E] Camel and Oases</h1><a id="logo" href="/">Blog | qzkszj</a><p class="description">过往如烟。</p></div><div id="nav-menu"><a class="current" href="/."><i class="fa undefined">Home</i></a><a href="/archives/"><i class="fa undefined"> Archive</i></a><a href="/about/"><i class="fa undefined"> About</i></a><a href="/atom.xml"><i class="fa undefined"> RSS</i></a></div></div><div class="pure-g" id="layout"><div class="pure-u-1 pure-u-md-3-4"><div class="content_container"><div class="post post-page"><h1 class="post-title">[AGC012E] Camel and Oases</h1><div class="post-meta">October 17,2018<span> | </span><span class="category"><a href="/categories/Solution/">Solution</a></span><span> | 638,2 mins.</span><script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script><span></span><span id="busuanzi_container_page_pv"> | views: <span id="busuanzi_value_page_pv"></span></span></div><div class="tags"><a href="/tags/DP-%E4%BC%98%E5%8C%96/">DP/优化</a></div><div class="post-content"><p><a target="_blank" rel="noopener" href="https://agc012.contest.atcoder.jp/tasks/agc012_e">AGC012E</a></p><p>状压就状压，考试时干嘛分层……<br>通过状压枚举前后缀就可以枚举所有情况了。</p><p>预处理left[i,j]表示在i行走值已经减半j次能往左走到哪，同理有right。<br>我们每次从i点出发，用行走值v可以走到[l,r]。<br>那么你需要将接下来的行走值分成两部分然后覆盖[1,l-1]和[r+1,n]。<br>我们希望预处理一个mi[i]表示用行走值中的一部分覆盖[1,i]，另一部分能覆盖[x,n]，x的最小值是多少。<br>然后为了这个先状压DP一下，设f[s]表示用s集合里的行走值覆盖[1,x]最大的x是多少，每次可以枚举一个不在s里的i然后转移，用这个i去覆盖接下来一段。<br>同理会有个g[s]表示覆盖[x,n]。<br>于是接下来再枚举拿哪些覆盖前缀即可处理mi。<br>在预处理时不考虑扔掉不跳跃的行动力，最后手动处理一下。</p><p>还有记得没有行动力也可以通过跳转来占据一个点，所以要多加一个行动力为0的段。</p><p><a target="_blank" rel="noopener" href="https://github.com/syniox/Online_Judge_solutions/blob/master/AtCoder/AGC012E.cpp">code</a>:</p><pre><code class="hljs language-cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;cstdio&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;cstring&gt;</span></span>
+<span class="hljs-type">const</span> <span class="hljs-type">int</span> N=<span class="hljs-number">2e5</span>+<span class="hljs-number">2</span>;
+<span class="hljs-type">int</span> n,bit,vl[<span class="hljs-number">19</span>],dp[N],pos[N],dpl[<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">18</span>],dpr[<span class="hljs-number">1</span>&lt;&lt;<span class="hljs-number">18</span>],to_l[N][<span class="hljs-number">19</span>],to_r[N][<span class="hljs-number">19</span>];
+<span class="hljs-comment">//dp[i]: 左侧覆盖1~i,右侧最多能够覆盖dp[i]~n(不使用未跳跃)</span>
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T</span>&gt; <span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">apn</span><span class="hljs-params">(T &amp;x,<span class="hljs-type">const</span> T y)</span></span>&#123;
+	<span class="hljs-keyword">if</span>(x&gt;y) x=y;
+&#125;
+
+<span class="hljs-keyword">template</span> &lt;<span class="hljs-keyword">class</span> <span class="hljs-title class_">T</span>&gt; <span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">apx</span><span class="hljs-params">(T &amp;x,<span class="hljs-type">const</span> T y)</span></span>&#123;
+	<span class="hljs-keyword">if</span>(x&lt;y) x=y;
+&#125;
+
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">nxi</span><span class="hljs-params">()</span></span>&#123;
+	<span class="hljs-type">int</span> x=<span class="hljs-number">0</span>;
+	<span class="hljs-type">char</span> c;
+	<span class="hljs-keyword">while</span>(((c=<span class="hljs-built_in">getchar</span>())&gt;<span class="hljs-string">&#x27;9&#x27;</span>||c&lt;<span class="hljs-string">&#x27;0&#x27;</span>)&amp;&amp;c!=<span class="hljs-string">&#x27;-&#x27;</span>);
+	<span class="hljs-type">const</span> <span class="hljs-type">bool</span> f=c==<span class="hljs-string">&#x27;-&#x27;</span>&amp;&amp;(c=<span class="hljs-built_in">getchar</span>());
+	<span class="hljs-keyword">while</span>(x=x*<span class="hljs-number">10</span><span class="hljs-number">-48</span>+c,(c=<span class="hljs-built_in">getchar</span>())&gt;=<span class="hljs-string">&#x27;0&#x27;</span>&amp;&amp;c&lt;=<span class="hljs-string">&#x27;9&#x27;</span>);
+	<span class="hljs-keyword">return</span> f?-x:x;
+&#125;
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> ONLINE_JUDGE</span>
+	<span class="hljs-built_in">freopen</span>(<span class="hljs-string">&quot;d.in&quot;</span>,<span class="hljs-string">&quot;r&quot;</span>,stdin);
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+	<span class="hljs-built_in">memset</span>(dp,<span class="hljs-number">1</span>,<span class="hljs-built_in">sizeof</span>(dp));
+	<span class="hljs-built_in">memset</span>(dpr,<span class="hljs-number">1</span>,<span class="hljs-built_in">sizeof</span>(dpr));
+	n=<span class="hljs-built_in">nxi</span>(),vl[<span class="hljs-number">0</span>]=<span class="hljs-built_in">nxi</span>();
+	<span class="hljs-keyword">for</span>(;vl[bit];++bit)&#123;
+		vl[bit+<span class="hljs-number">1</span>]=vl[bit]&gt;&gt;<span class="hljs-number">1</span>;
+	&#125;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=n;++i)&#123;
+		pos[i]=<span class="hljs-built_in">nxi</span>();
+	&#125;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=bit;++i)&#123;
+		<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> s=<span class="hljs-number">1</span>,t;s&lt;=n;s=t+<span class="hljs-number">1</span>)&#123;
+			t=s;
+			<span class="hljs-keyword">while</span>(t&lt;n&amp;&amp;pos[t+<span class="hljs-number">1</span>]-pos[t]&lt;=vl[i]) ++t;
+			<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=s;j&lt;=t;++j)&#123;
+				to_l[j][i]=s,to_r[j][i]=t;
+			&#125;
+		&#125;
+	&#125;
+	dpl[<span class="hljs-number">0</span>]=<span class="hljs-number">0</span>,dpr[<span class="hljs-number">0</span>]=n+<span class="hljs-number">1</span>;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">1</span>&lt;&lt;bit;++i)&#123;
+		<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> j=<span class="hljs-number">1</span>;j&lt;=bit;++j)&#123;
+			<span class="hljs-keyword">if</span>(!(i&amp;(<span class="hljs-number">1</span>&lt;&lt;(j<span class="hljs-number">-1</span>))))&#123;
+				<span class="hljs-built_in">apx</span>(dpl[i|<span class="hljs-number">1</span>&lt;&lt;(j<span class="hljs-number">-1</span>)],to_r[dpl[i]+<span class="hljs-number">1</span>][j]);
+				<span class="hljs-keyword">if</span>(dpr[i])&#123;
+					<span class="hljs-built_in">apn</span>(dpr[i|<span class="hljs-number">1</span>&lt;&lt;(j<span class="hljs-number">-1</span>)],to_l[dpr[i]<span class="hljs-number">-1</span>][j]);
+				&#125;
+				<span class="hljs-keyword">else</span> dpr[i|<span class="hljs-number">1</span>&lt;&lt;(j<span class="hljs-number">-1</span>)]=<span class="hljs-number">0</span>;
+			&#125;
+		&#125;
+	&#125;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">1</span>&lt;&lt;bit;++i)&#123;
+		<span class="hljs-built_in">apn</span>(dp[dpl[i]],dpr[((<span class="hljs-number">1</span>&lt;&lt;bit)<span class="hljs-number">-1</span>)^i]);
+	&#125;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=n;i;--i)&#123;
+		<span class="hljs-built_in">apn</span>(dp[i<span class="hljs-number">-1</span>],dp[i]);
+	&#125;
+	<span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">1</span>;i&lt;=n;++i)&#123;
+		<span class="hljs-built_in">puts</span>(dp[to_l[i][<span class="hljs-number">0</span>]<span class="hljs-number">-1</span>]&lt;=to_r[i][<span class="hljs-number">0</span>]+<span class="hljs-number">1</span>?<span class="hljs-string">&quot;Possible&quot;</span>:<span class="hljs-string">&quot;Impossible&quot;</span>);
+	&#125;
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+&#125;
+</code></pre></div><div class="page-navigator"><a class="pre" href="/2018-10/AGC019F/">Previous</a><a class="next" href="/2018-09/BZOJ4657/">Next</a></div></div></div></div><div class="pure-u-1-4"><div id="sidebar"><div class="widget"><div class="widget-title">Categories</div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Note/">Note</a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Recollections/">Recollections</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Solution/">Solution</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Starred/">Starred</a><span class="category-list-count">5</span></li></ul></div><div class="widget"><div class="widget-title">Tags</div><div class="tagcloud"><a href="/tags/%E7%BB%84%E5%90%88%E6%95%B0%E5%AD%A6/" style="font-size:15px">组合数学</a> <a href="/tags/DP-%E4%BC%98%E5%8C%96/" style="font-size:15px">DP/优化</a> <a href="/tags/%E6%95%B0%E8%AE%BA/" style="font-size:16px">数论</a> <a href="/tags/%E5%AE%B9%E6%96%A5/" style="font-size:13px">容斥</a> <a href="/tags/%E9%9B%86%E5%90%88/" style="font-size:13px">集合</a> <a href="/tags/%E5%81%8F%E5%BA%8F/" style="font-size:13px">偏序</a> <a href="/tags/%E6%A0%91/" style="font-size:13px">树</a> <a href="/tags/%E6%8B%93%E6%89%91/" style="font-size:13px">拓扑</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E6%B5%81/" style="font-size:14px">网络流</a> <a href="/tags/%E7%BB%93%E8%AE%BA/" style="font-size:13px">结论</a> <a href="/tags/%E7%BE%A4%E8%AE%BA/" style="font-size:13px">群论</a> <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="font-size:13px">字符串</a> <a href="/tags/%E7%BA%BF%E6%80%A7%E4%BB%A3%E6%95%B0/" style="font-size:13px">线性代数</a> <a href="/tags/%E7%9F%A9%E9%98%B5/" style="font-size:13px">矩阵</a> <a href="/tags/%E5%A4%9A%E9%A1%B9%E5%BC%8F/" style="font-size:14px">多项式</a> <a href="/tags/%E6%94%AF%E9%85%8D%E6%A0%91/" style="font-size:13px">支配树</a> <a href="/tags/%E5%9B%BE%E8%AE%BA/" style="font-size:14px">图论</a> <a href="/tags/%E6%95%B0%E5%AD%A6/" style="font-size:13px">数学</a></div></div><div class="widget"><div class="widget-title">Links</div><ul class="links-list"><li class="links-list-item"><a href="https://cnblogs.com/dedicatus545" title="dedicatus545" target="_blank">dedicatus545</a></li></ul><ul class="links-list"><li class="links-list-item"><a href="https://blog.sshockwave.net" title="sshockwave" target="_blank">sshockwave</a></li></ul><ul class="links-list"><li class="links-list-item"><a href="https://www.cnblogs.com/dcdcbigbig/" title="DCDCbigbig" target="_blank">DCDCbigbig</a></li></ul><ul class="links-list"><li class="links-list-item"><a href="https://www.cnblogs.com/JackyhhJuRuo/" title="Jackyhh" target="_blank">Jackyhh</a></li></ul></div></div></div></div><div id="footer">© <a href="/" real="nofollow">Blog | qzkszj.</a><i> Powered by </i><a rel="nofollow" target="_blank" href="https://hexo.io">Hexo</a></div></body></html>
